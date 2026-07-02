@@ -1,0 +1,562 @@
+/* ==========================================================
+   Skyly Weather App
+   Base Styles
+   ========================================================== */
+
+:root{
+    --primary:#4facfe;
+    --secondary:#00f2fe;
+
+    --card-bg:rgba(255,255,255,.18);
+
+    --glass:blur(14px);
+
+    --text:#ffffff;
+
+    --shadow:0 10px 35px rgba(0,0,0,.25);
+
+    --radius:22px;
+
+    --transition:.35s ease;
+
+    --font:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    min-height:100vh;
+
+    font-family:var(--font);
+
+    color:var(--text);
+
+    overflow-x:hidden;
+
+    transition:
+    background .8s ease,
+    color .4s ease;
+
+    display:flex;
+    flex-direction:column;
+
+}
+
+/* ========================================= */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    background-image:url("../assets/images/background.jpg");
+
+    background-size:cover;
+
+    background-position:center;
+
+    opacity:.15;
+
+    z-index:-3;
+
+}
+
+/* ========================================= */
+
+#background-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:-2;
+
+    backdrop-filter:blur(3px);
+
+}
+
+/* ========================================= */
+
+header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:25px 8%;
+
+}
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+.logo img{
+
+    width:55px;
+
+}
+
+.logo h1{
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+}
+
+/* ================= Search ================= */
+
+#search-form{
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+#search-input{
+
+    width:280px;
+
+    padding:14px 18px;
+
+    border:none;
+
+    border-radius:30px;
+
+    outline:none;
+
+    background:rgba(255,255,255,.18);
+
+    color:white;
+
+    backdrop-filter:blur(8px);
+
+}
+
+#search-input::placeholder{
+
+    color:#eee;
+
+}
+
+button{
+
+    cursor:pointer;
+
+    border:none;
+
+    border-radius:30px;
+
+    padding:13px 20px;
+
+    background:linear-gradient(
+    135deg,
+    var(--primary),
+    var(--secondary));
+
+    color:white;
+
+    font-weight:600;
+
+    transition:var(--transition);
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 20px rgba(0,0,0,.2);
+
+}
+
+/* ========================================= */
+
+main{
+
+    width:min(1200px,92%);
+
+    margin:auto;
+
+    flex:1;
+
+}
+
+/* ========================================= */
+
+.card{
+
+    background:var(--card-bg);
+
+    backdrop-filter:var(--glass);
+
+    border-radius:var(--radius);
+
+    padding:35px;
+
+    box-shadow:var(--shadow);
+
+}
+
+/* ========================================= */
+
+.current-weather{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    text-align:center;
+
+    gap:20px;
+
+}
+
+/* ========================================= */
+
+.city-section h2{
+
+    font-size:2.2rem;
+
+}
+
+.city-section p{
+
+    opacity:.9;
+
+}
+
+/* ========================================= */
+
+.weather-main{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:25px;
+
+}
+
+.weather-main img{
+
+    width:110px;
+
+}
+
+.weather-main h1{
+
+    font-size:5rem;
+
+}
+
+/* ========================================= */
+
+#condition{
+
+    font-size:1.4rem;
+
+    font-weight:500;
+
+}
+
+/* ========================================= */
+
+.weather-details{
+
+    display:flex;
+
+    gap:45px;
+
+    margin-top:15px;
+
+}
+
+.weather-details div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:1.1rem;
+
+}
+
+/* ========================================= */
+
+.controls{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+    margin:35px 0;
+
+}
+
+/* ========================================= */
+
+.forecast-title{
+
+    margin-bottom:20px;
+
+    font-size:1.8rem;
+
+}
+
+/* ========================================= */
+
+.forecast-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(170px,1fr));
+
+    gap:20px;
+
+}
+
+/* ========================================= */
+
+.forecast-card{
+
+    background:rgba(255,255,255,.15);
+
+    border-radius:18px;
+
+    padding:20px;
+
+    text-align:center;
+
+    backdrop-filter:blur(12px);
+
+    transition:.3s;
+
+}
+
+.forecast-card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+/* ========================================= */
+
+.forecast-card img{
+
+    width:60px;
+
+    margin:10px 0;
+
+}
+
+/* ========================================= */
+
+.loading{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:15px;
+
+    margin-top:40px;
+
+}
+
+/* ========================================= */
+
+.spinner{
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:50%;
+
+    border:6px solid rgba(255,255,255,.25);
+
+    border-top:6px solid white;
+
+}
+
+/* ========================================= */
+
+.error{
+
+    margin-top:30px;
+
+    background:#ff5252;
+
+    padding:16px;
+
+    border-radius:12px;
+
+    text-align:center;
+
+}
+
+/* ========================================= */
+
+.hidden{
+
+    display:none;
+
+}
+
+/* ========================================= */
+
+footer{
+
+    padding:30px;
+
+    text-align:center;
+
+    opacity:.9;
+
+}
+
+/* ==========================================================
+                WEATHER BACKGROUNDS
+========================================================== */
+
+/* Clear Day */
+
+.clear-day{
+
+background:
+linear-gradient(
+135deg,
+#4facfe 0%,
+#00f2fe 100%);
+
+}
+
+/* Clear Night */
+
+.clear-night{
+
+background:
+linear-gradient(
+160deg,
+#0f2027,
+#203a43,
+#2c5364);
+
+}
+
+/* Clouds Day */
+
+.clouds-day{
+
+background:
+linear-gradient(
+135deg,
+#bdc3c7,
+#2c3e50);
+
+}
+
+/* Clouds Night */
+
+.clouds-night{
+
+background:
+linear-gradient(
+135deg,
+#434343,
+#000000);
+
+}
+
+/* Rain */
+
+.rain{
+
+background:
+linear-gradient(
+180deg,
+#314755,
+#26a0da);
+
+}
+
+/* Thunder */
+
+.thunderstorm{
+
+background:
+linear-gradient(
+180deg,
+#141E30,
+#243B55);
+
+}
+
+/* Snow */
+
+.snow{
+
+background:
+linear-gradient(
+135deg,
+#e6dada,
+#274046);
+
+}
+
+/* Mist */
+
+.mist{
+
+background:
+linear-gradient(
+135deg,
+#757f9a,
+#d7dde8);
+
+}
+
+/* ========================================= */
+
+.fade-bg{
+
+transition:
+background .8s ease;
+
+}

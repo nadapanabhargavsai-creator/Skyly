@@ -1,0 +1,402 @@
+/* ==================================================
+   Skyly Weather App
+   Animations
+================================================== */
+
+/* -------------------------------
+   Global Smooth Transitions
+-------------------------------- */
+
+*,
+*::before,
+*::after{
+    transition:
+        background-color .4s ease,
+        color .3s ease,
+        border-color .3s ease,
+        box-shadow .35s ease,
+        transform .35s ease;
+}
+
+/* -------------------------------
+   Background Crossfade
+-------------------------------- */
+
+body{
+    transition:
+        background .8s ease-in-out,
+        background-image .8s ease-in-out;
+}
+
+#background-overlay{
+    opacity:1;
+    transition:opacity .8s ease;
+}
+
+/* -------------------------------
+   Fade In
+-------------------------------- */
+
+.fade-in{
+    animation:fadeIn .7s ease forwards;
+}
+
+@keyframes fadeIn{
+
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* -------------------------------
+   Slide Up
+-------------------------------- */
+
+.slide-up{
+    animation:slideUp .6s ease;
+}
+
+@keyframes slideUp{
+
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* -------------------------------
+   Forecast Cards
+-------------------------------- */
+
+.forecast-card{
+
+    opacity:0;
+
+    animation:forecastFade .8s forwards;
+
+}
+
+.forecast-card:nth-child(1){animation-delay:.05s;}
+.forecast-card:nth-child(2){animation-delay:.15s;}
+.forecast-card:nth-child(3){animation-delay:.25s;}
+.forecast-card:nth-child(4){animation-delay:.35s;}
+.forecast-card:nth-child(5){animation-delay:.45s;}
+
+@keyframes forecastFade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* -------------------------------
+   Spinner
+-------------------------------- */
+
+.spinner{
+
+    animation:spin .9s linear infinite;
+
+}
+
+@keyframes spin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+/* -------------------------------
+   Floating Icon
+-------------------------------- */
+
+#weather-icon{
+
+    animation:floatIcon 3s ease-in-out infinite;
+
+}
+
+@keyframes floatIcon{
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
+}
+
+/* -------------------------------
+   Button Hover
+-------------------------------- */
+
+button:hover{
+
+    transform:translateY(-3px) scale(1.03);
+
+}
+
+button:active{
+
+    transform:scale(.96);
+
+}
+
+/* -------------------------------
+   Glass Card Hover
+-------------------------------- */
+
+.card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 18px 40px rgba(0,0,0,.25);
+
+}
+
+/* -------------------------------
+   Pulse
+-------------------------------- */
+
+.pulse{
+
+    animation:pulse 2s infinite;
+
+}
+
+@keyframes pulse{
+
+    0%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.04);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+
+}
+
+/* ==================================================
+            Rain Animation
+================================================== */
+
+body.rain::after{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    background-image:
+        repeating-linear-gradient(
+            transparent 0px,
+            transparent 12px,
+            rgba(255,255,255,.15) 13px,
+            rgba(255,255,255,.25) 14px
+        );
+
+    animation:rainFall .55s linear infinite;
+
+    opacity:.45;
+
+}
+
+@keyframes rainFall{
+
+    from{
+        background-position:0 -120px;
+    }
+
+    to{
+        background-position:-40px 120px;
+    }
+
+}
+
+/* ==================================================
+              Snow Animation
+================================================== */
+
+body.snow::after{
+
+    content:"❄ ❅ ❆ ❄ ❅";
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    color:rgba(255,255,255,.65);
+
+    font-size:18px;
+
+    letter-spacing:40px;
+
+    white-space:nowrap;
+
+    animation:snowFall 14s linear infinite;
+
+}
+
+@keyframes snowFall{
+
+    from{
+
+        transform:translateY(-100%);
+
+    }
+
+    to{
+
+        transform:translateY(100vh);
+
+    }
+
+}
+
+/* ==================================================
+              Mist Animation
+================================================== */
+
+body.mist::after{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+        radial-gradient(circle,
+        rgba(255,255,255,.08),
+        transparent 70%);
+
+    animation:fogMove 12s ease-in-out infinite alternate;
+
+    pointer-events:none;
+
+}
+
+@keyframes fogMove{
+
+    from{
+
+        transform:translateX(-40px);
+
+    }
+
+    to{
+
+        transform:translateX(40px);
+
+    }
+
+}
+
+/* ==================================================
+             Thunder Flash
+================================================== */
+
+body.thunderstorm.flash{
+
+    animation:lightning .4s ease;
+
+}
+
+@keyframes lightning{
+
+    0%{
+        filter:brightness(1);
+    }
+
+    10%{
+        filter:brightness(2.4);
+    }
+
+    20%{
+        filter:brightness(.8);
+    }
+
+    30%{
+        filter:brightness(2);
+    }
+
+    100%{
+        filter:brightness(1);
+    }
+
+}
+
+/* ==================================================
+              Loading Fade
+================================================== */
+
+.loading.show{
+
+    animation:fadeIn .35s ease;
+
+}
+
+.error{
+
+    animation:fadeIn .4s ease;
+
+}
+
+/* ==================================================
+              Utility Classes
+================================================== */
+
+.hidden{
+    display:none !important;
+}
+
+.visible{
+    display:block;
+}
