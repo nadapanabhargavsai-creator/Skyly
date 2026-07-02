@@ -12,7 +12,10 @@ import {
     formatWindSpeed,
     getWeatherCondition,
     getWeatherIcon,
-    applyBackground
+    applyBackground,
+    formatUVIndex,
+    formatAQI,
+    formatTime
 } from "./helpers.js";
 
 /* ---------------- DOM Elements ---------------- */
@@ -24,6 +27,11 @@ const condition = document.getElementById("condition");
 const humidity = document.getElementById("humidity");
 const windSpeed = document.getElementById("wind-speed");
 const weatherIcon = document.getElementById("weather-icon");
+
+const uvIndex = document.getElementById("uv-index");
+const sunrise = document.getElementById("sunrise");
+const sunset = document.getElementById("sunset");
+const aqi = document.getElementById("aqi");
 
 const forecastContainer = document.getElementById("forecast-container");
 
@@ -84,6 +92,22 @@ export function renderCurrentWeather(data) {
 
     windSpeed.textContent =
         formatWindSpeed(data.wind);
+
+    if (uvIndex) {
+        uvIndex.textContent = formatUVIndex(data.uvIndex);
+    }
+
+    if (sunrise) {
+        sunrise.textContent = formatTime(data.sunrise);
+    }
+
+    if (sunset) {
+        sunset.textContent = formatTime(data.sunset);
+    }
+
+    if (aqi) {
+        aqi.textContent = formatAQI(data.aqi);
+    }
 
     weatherIcon.src =
         getWeatherIcon(weather);
@@ -181,7 +205,12 @@ export function resetUI() {
 
     windSpeed.textContent = "--";
 
-    weatherIcon.src = "assets/icons/clear.svg";
+    if (uvIndex) uvIndex.textContent = "--";
+    if (sunrise) sunrise.textContent = "--";
+    if (sunset) sunset.textContent = "--";
+    if (aqi) aqi.textContent = "--";
+
+    weatherIcon.src = "assests/icons/clear.svg";
 
     clearForecast();
 

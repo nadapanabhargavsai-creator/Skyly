@@ -47,20 +47,37 @@ export async function getWeatherByCoords(lat, lon) {
 
     try {
 
-        const url =
+        const weatherUrl =
             `${WEATHER_API}?latitude=${lat}&longitude=${lon}` +
             "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day" +
-            "&daily=weather_code,temperature_2m_max,temperature_2m_min" +
+            "&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max" +
             "&forecast_days=5" +
             "&timezone=auto";
 
-        const response = await fetch(url);
+        const aqUrl =
+            `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}` +
+            "&current=us_aqi,pm2_5,pm10" +
+            "&timezone=auto";
 
-        if (!response.ok) {
+        const [weatherRes, aqRes] = await Promise.all([
+            fetch(weatherUrl),
+            fetch(aqUrl).catch(() => null)
+        ]);
+
+        if (!weatherRes.ok) {
             throw new Error("Unable to fetch weather.");
         }
 
-        return await response.json();
+        const weatherData = await weatherRes.json();
+        let aqData = null;
+        if (aqRes && aqRes.ok) {
+            aqData = await aqRes.json();
+        }
+
+        return {
+            ...weatherData,
+            aq: aqData ? aqData.current : null
+        };
 
     } catch (error) {
         throw error;
@@ -93,6 +110,8 @@ export async function getWeatherByCity(city) {
 export function parseCurrentWeather(result) {
 
     const current = result.weather.current;
+    const daily = result.weather.daily;
+    const aq = result.weather.aq;
 
     return {
 
@@ -107,7 +126,19 @@ export function parseCurrentWeather(result) {
 
         weatherCode: current.weather_code,
 
-        isDay: current.is_day === 1
+        isDay: current.is_day === 1,
+
+        sunrise: daily && daily.sunrise ? daily.sunrise[0] : null,
+
+        sunset: daily && daily.sunset ? daily.sunset[0] : null,
+
+        uvIndex: daily && daily.uv_index_max ? daily.uv_index_max[0] : null,
+
+        aqi: aq ? aq.us_aqi : null,
+
+        pm2_5: aq ? aq.pm2_5 : null,
+
+        pm10: aq ? aq.pm10 : null
 
     };
 
@@ -157,4 +188,83 @@ export async function getCompleteWeather(city) {
 
     };
 
+}
+
+/**
+ * Fetch suggestions from OpenStreetMap Nominatim with fallback to Open-Meteo
+ */
+export async function getSuggestions(query) {
+    if (!query || query.trim().length < 3) return [];
+    
+    const cleanQuery = query.trim();
+    
+    try {
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(cleanQuery)}&format=json&limit=5&addressdetails=1`
+        );
+        
+        if (!response.ok) {
+            throw new Error("Nominatim API error");
+        }
+        
+        const data = await response.json();
+        
+        return data.map(item => {
+            const name = item.name || "";
+            let country = "";
+            let state = "";
+            
+            if (item.address) {
+                country = item.address.country || "";
+                state = item.address.state || item.address.state_district || "";
+            }
+            
+            let fullName = item.display_name;
+            if (item.address) {
+                const parts = [];
+                if (name) parts.push(name);
+                if (state && state !== name) parts.push(state);
+                if (country && country !== name) parts.push(country);
+                fullName = parts.join(", ");
+            }
+            
+            return {
+                name: name,
+                fullName: fullName,
+                latitude: parseFloat(item.lat),
+                longitude: parseFloat(item.lon),
+                country: country,
+                state: state
+            };
+        });
+    } catch (e) {
+        console.warn("Nominatim Geocoding failed, falling back to Open-Meteo Geocoding:", e);
+        try {
+            const response = await fetch(
+                `${GEO_API}?name=${encodeURIComponent(cleanQuery)}&count=5&language=en&format=json`
+            );
+            
+            if (!response.ok) {
+                return [];
+            }
+            
+            const data = await response.json();
+            
+            if (!data.results) {
+                return [];
+            }
+            
+            return data.results.map(item => ({
+                name: item.name,
+                fullName: `${item.name}${item.admin1 ? ", " + item.admin1 : ""}, ${item.country}`,
+                latitude: item.latitude,
+                longitude: item.longitude,
+                country: item.country,
+                state: item.admin1 || ""
+            }));
+        } catch (err) {
+            console.error("Open-Meteo fallback geocoding failed too:", err);
+            return [];
+        }
+    }
 }

@@ -5,7 +5,9 @@
 ========================================================= */
 
 import {
-    getCompleteWeather
+    getCompleteWeather,
+    getWeatherByCoords,
+    getSuggestions
 } from "./weather.js";
 
 import {
@@ -14,7 +16,8 @@ import {
 
 import {
     initSearch,
-    restoreLastSearch
+    restoreLastSearch,
+    initAutocomplete
 } from "./search.js";
 
 import {
@@ -66,6 +69,90 @@ async function loadCity(city) {
 }
 
 /* -----------------------------
+   Load Weather by Coordinates (Autocomplete selection)
+------------------------------ */
+
+async function loadCityCoords(loc) {
+
+    try {
+
+        showLoading();
+
+        const weather = await getWeatherByCoords(loc.latitude, loc.longitude);
+
+        const current = weather.current;
+        const daily = weather.daily;
+        const aq = weather.aq;
+
+        const data = {
+
+            current: {
+
+                city: loc.fullName,
+
+                temperature:
+                    current.temperature_2m,
+
+                humidity:
+                    current.relative_humidity_2m,
+
+                wind:
+                    current.wind_speed_10m,
+
+                weatherCode:
+                    current.weather_code,
+
+                isDay:
+                    current.is_day === 1,
+
+                sunrise: daily && daily.sunrise ? daily.sunrise[0] : null,
+
+                sunset: daily && daily.sunset ? daily.sunset[0] : null,
+
+                uvIndex: daily && daily.uv_index_max ? daily.uv_index_max[0] : null,
+
+                aqi: aq ? aq.us_aqi : null,
+
+                pm2_5: aq ? aq.pm2_5 : null,
+
+                pm10: aq ? aq.pm10 : null
+
+            },
+
+            forecast: daily.time.map((date, index) => ({
+
+                date,
+
+                max:
+                    daily.temperature_2m_max[index],
+
+                min:
+                    daily.temperature_2m_min[index],
+
+                weatherCode:
+                    daily.weather_code[index]
+
+            }))
+
+        };
+
+        weatherCache = data;
+
+        renderWeather(data);
+
+    } catch (error) {
+
+        showError(error.message);
+
+    } finally {
+
+        hideLoading();
+
+    }
+
+}
+
+/* -----------------------------
    Load Current Location
 ------------------------------ */
 
@@ -80,6 +167,7 @@ async function loadCurrentLocation() {
 
         const current = result.current;
         const daily = result.daily;
+        const aq = result.aq;
 
         const data = {
 
@@ -100,7 +188,19 @@ async function loadCurrentLocation() {
                     current.weather_code,
 
                 isDay:
-                    current.is_day === 1
+                    current.is_day === 1,
+
+                sunrise: daily && daily.sunrise ? daily.sunrise[0] : null,
+
+                sunset: daily && daily.sunset ? daily.sunset[0] : null,
+
+                uvIndex: daily && daily.uv_index_max ? daily.uv_index_max[0] : null,
+
+                aqi: aq ? aq.us_aqi : null,
+
+                pm2_5: aq ? aq.pm2_5 : null,
+
+                pm10: aq ? aq.pm10 : null
 
             },
 
@@ -165,6 +265,8 @@ function toggleUnit() {
 function registerEvents() {
 
     initSearch(loadCity);
+
+    initAutocomplete(loadCityCoords, getSuggestions);
 
     document
         .getElementById("location-btn")

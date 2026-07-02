@@ -193,7 +193,7 @@ export function getWeatherIcon(condition) {
 
     };
 
-    return `assets/icons/${icons[condition] || "clear.svg"}`;
+    return `assests/icons/${icons[condition] || "clear.svg"}`;
 
 }
 
@@ -330,4 +330,48 @@ export function sleep(ms) {
 
     });
 
+}
+
+/**
+ * Format UV Index with rating
+ */
+export function formatUVIndex(val) {
+    if (val === null || val === undefined) return "--";
+    let desc = "Low";
+    if (val >= 11) desc = "Extreme";
+    else if (val >= 8) desc = "Very High";
+    else if (val >= 6) desc = "High";
+    else if (val >= 3) desc = "Moderate";
+    return `${val.toFixed(1)} (${desc})`;
+}
+
+/**
+ * Format US AQI with rating
+ */
+export function formatAQI(val) {
+    if (val === null || val === undefined) return "--";
+    let desc = "Good";
+    if (val >= 301) desc = "Hazardous";
+    else if (val >= 201) desc = "Very Unhealthy";
+    else if (val >= 151) desc = "Unhealthy";
+    else if (val >= 101) desc = "Sensitive Group";
+    else if (val >= 51) desc = "Moderate";
+    return `${val} (${desc})`;
+}
+
+/**
+ * Format ISO datetime string to local time string
+ */
+export function formatTime(isoString) {
+    if (!isoString) return "--";
+    try {
+        const date = new Date(isoString);
+        return date.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true
+        });
+    } catch {
+        return "--";
+    }
 }

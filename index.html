@@ -14,7 +14,7 @@
     <title>Skyly | Weather App</title>
 
     <link rel="icon"
-          href="assets/favicon.ico">
+          href="assests/favicon.ico">
 
     <link rel="stylesheet"
           href="css/style.css">
@@ -35,7 +35,7 @@
 
     <div class="logo">
 
-        <img src="assets/images/logo.png"
+        <img src="assests/images/logo.png"
              alt="Skyly Logo">
 
         <h1>Skyly</h1>
@@ -44,11 +44,17 @@
 
     <form id="search-form">
 
-        <input
-                type="text"
-                id="search-input"
-                placeholder="Search any city..."
-                autocomplete="off">
+        <div class="search-container">
+
+            <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Search any city..."
+                    autocomplete="off">
+
+            <div id="suggestions-list" class="suggestions-list hidden"></div>
+
+        </div>
 
         <button type="submit">
 
@@ -85,7 +91,7 @@
 
         <img
                 id="weather-icon"
-                src="assets/icons/clear.svg"
+                src="assests/icons/clear.svg"
                 alt="Weather Icon">
 
         <h1 id="temperature">
@@ -106,9 +112,9 @@
 
         <div>
 
-            💧
+            <span class="detail-label">💧 Humidity</span>
 
-            <span id="humidity">
+            <span id="humidity" class="detail-value">
 
                 70%
 
@@ -118,11 +124,59 @@
 
         <div>
 
-            🌬️
+            <span class="detail-label">🌬️ Wind Speed</span>
 
-            <span id="wind-speed">
+            <span id="wind-speed" class="detail-value">
 
                 8 km/h
+
+            </span>
+
+        </div>
+
+        <div>
+
+            <span class="detail-label">☀️ UV Index</span>
+
+            <span id="uv-index" class="detail-value">
+
+                --
+
+            </span>
+
+        </div>
+
+        <div>
+
+            <span class="detail-label">🌅 Sunrise</span>
+
+            <span id="sunrise" class="detail-value">
+
+                --
+
+            </span>
+
+        </div>
+
+        <div>
+
+            <span class="detail-label">🌇 Sunset</span>
+
+            <span id="sunset" class="detail-value">
+
+                --
+
+            </span>
+
+        </div>
+
+        <div>
+
+            <span class="detail-label">🍃 Air Quality</span>
+
+            <span id="aqi" class="detail-value">
+
+                --
 
             </span>
 
