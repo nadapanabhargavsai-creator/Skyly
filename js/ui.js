@@ -47,6 +47,55 @@ const errorBox = document.getElementById("error-message");
 let weatherMap = null;
 let radarLayer = null;
 
+let currentLat = null;
+let currentLon = null;
+let currentCityName = null;
+
+/* ======================================================
+   External Links Setup
+====================================================== */
+
+function initExternalLinks() {
+    const cards = document.querySelectorAll(".clickable-card");
+    cards.forEach(card => {
+        card.addEventListener("click", () => {
+            if (!currentLat || !currentLon) return;
+            const topic = card.getAttribute("data-topic");
+            const queryCity = encodeURIComponent(currentCityName || "");
+            let url = "";
+
+            switch (topic) {
+                case "aqi":
+                    url = `https://weather.com/forecast/air-quality/l/${currentLat},${currentLon}`;
+                    break;
+                case "radar":
+                    url = `https://weather.com/weather/radar/interactive/l/${currentLat},${currentLon}`;
+                    break;
+                case "astronomy":
+                    url = `https://weather.com/en-IN/weather/today/l/${currentLat},${currentLon}?par=samsung_widget_INS&cm_ven=moon&theme=samsungDark&sflag=1&samsung_ver=80500#todayDetails`;
+                    break;
+                case "humidity":
+                case "wind":
+                case "uv":
+                case "sunrise":
+                case "sunset":
+                    url = `https://weather.com/weather/today/l/${currentLat},${currentLon}`;
+                    break;
+                default:
+                    url = `https://weather.com/weather/today/l/${currentLat},${currentLon}`;
+                    break;
+            }
+
+            if (url) {
+                window.open(url, "_blank");
+            }
+        });
+    });
+}
+
+// Initialize links on load
+document.addEventListener("DOMContentLoaded", initExternalLinks);
+
 /* ======================================================
    Loading
 ====================================================== */
@@ -84,6 +133,10 @@ export function hideError() {
 ====================================================== */
 
 export function renderCurrentWeather(data) {
+
+    currentLat = data.latitude;
+    currentLon = data.longitude;
+    currentCityName = data.city;
 
     const weather = getWeatherCondition(data.weatherCode);
 

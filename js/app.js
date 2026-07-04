@@ -162,6 +162,22 @@ async function loadCityCoords(loc) {
 
 }
 
+async function getCityNameFromCoords(lat, lon) {
+    try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+        if (response.ok) {
+            const data = await response.json();
+            if (data && data.address) {
+                const city = data.address.city || data.address.town || data.address.village || data.address.county;
+                if (city) return city;
+            }
+        }
+    } catch (e) {
+        console.warn("Reverse geocode failed", e);
+    }
+    return "Current Location";
+}
+
 /* -----------------------------
    Load Current Location
 ------------------------------ */
@@ -179,15 +195,19 @@ async function loadCurrentLocation() {
         const daily = result.daily;
         const aq = result.aq;
 
+        const actualLat = result.location ? result.location.latitude : result.latitude;
+        const actualLon = result.location ? result.location.longitude : result.longitude;
+        const actualCity = await getCityNameFromCoords(actualLat, actualLon);
+
         const data = {
 
             current: {
 
-                city: "Current Location",
+                city: actualCity,
 
-                latitude: result.location ? result.location.latitude : result.latitude,
+                latitude: actualLat,
 
-                longitude: result.location ? result.location.longitude : result.longitude,
+                longitude: actualLon,
 
                 temperature:
                     current.temperature_2m,

@@ -113,7 +113,7 @@
 
     <div class="weather-details">
 
-        <div>
+        <div class="clickable-card" data-topic="humidity">
 
             <span class="detail-label">💧 Humidity</span>
 
@@ -125,7 +125,7 @@
 
         </div>
 
-        <div>
+        <div class="clickable-card" data-topic="wind">
 
             <span class="detail-label">🌬️ Wind Speed</span>
 
@@ -137,7 +137,7 @@
 
         </div>
 
-        <div>
+        <div class="clickable-card" data-topic="uv">
 
             <span class="detail-label">☀️ UV Index</span>
 
@@ -149,7 +149,7 @@
 
         </div>
 
-        <div>
+        <div class="clickable-card" data-topic="sunrise">
 
             <span class="detail-label">🌅 Sunrise</span>
 
@@ -161,7 +161,7 @@
 
         </div>
 
-        <div>
+        <div class="clickable-card" data-topic="sunset">
 
             <span class="detail-label">🌇 Sunset</span>
 
@@ -173,7 +173,7 @@
 
         </div>
 
-        <div>
+        <div class="clickable-card" data-topic="aqi">
 
             <span class="detail-label">🍃 Air Quality</span>
 
@@ -206,18 +206,18 @@
 
 </section>
 
-<section class="astronomy card">
+<section class="astronomy card clickable-card" data-topic="astronomy">
     <h2 class="section-title">Moon Phase</h2>
     <div class="moon-phase-container">
         <div id="moon-visual">
-            <div class="moon-disc"></div>
+            <img src="assests/images/moon.png" class="moon-realistic" alt="Moon Phase">
             <div class="moon-shadow"></div>
         </div>
         <h3 id="moon-phase-name">Waxing Crescent</h3>
     </div>
 </section>
 
-<section class="radar-map card">
+<section class="radar-map card clickable-card" data-topic="radar">
     <h2 class="section-title">Precipitation Radar</h2>
     <div id="weather-map"></div>
 </section>
