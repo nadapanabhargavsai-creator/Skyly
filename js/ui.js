@@ -15,7 +15,8 @@ import {
     applyBackground,
     formatUVIndex,
     formatAQI,
-    formatTime
+    formatTime,
+    calculateMoonPhase
 } from "./helpers.js";
 
 /* ---------------- DOM Elements ---------------- */
@@ -31,12 +32,20 @@ const weatherIcon = document.getElementById("weather-icon");
 const uvIndex = document.getElementById("uv-index");
 const sunrise = document.getElementById("sunrise");
 const sunset = document.getElementById("sunset");
+const moonrise = document.getElementById("moonrise");
+const moonset = document.getElementById("moonset");
 const aqi = document.getElementById("aqi");
+
+const moonShadow = document.querySelector(".moon-shadow");
+const moonPhaseName = document.getElementById("moon-phase-name");
 
 const forecastContainer = document.getElementById("forecast-container");
 
 const loading = document.getElementById("loading");
 const errorBox = document.getElementById("error-message");
+
+let weatherMap = null;
+let radarLayer = null;
 
 /* ======================================================
    Loading
@@ -105,6 +114,14 @@ export function renderCurrentWeather(data) {
         sunset.textContent = formatTime(data.sunset);
     }
 
+    if (moonrise && data.moonrise) {
+        moonrise.textContent = formatTime(data.moonrise);
+    }
+
+    if (moonset && data.moonset) {
+        moonset.textContent = formatTime(data.moonset);
+    }
+
     if (aqi) {
         aqi.textContent = formatAQI(data.aqi);
     }
@@ -115,6 +132,13 @@ export function renderCurrentWeather(data) {
     weatherIcon.alt = weather;
 
     applyBackground(weather, data.isDay);
+
+    let phase = calculateMoonPhase(new Date());
+    renderMoonPhase(phase);
+
+    if (data.latitude && data.longitude) {
+        updateRadarMap(data.latitude, data.longitude);
+    }
 
 }
 
@@ -244,4 +268,96 @@ export function animateBackground() {
 
     }, 800);
 
+}
+
+/* ======================================================
+   Moon Phase Visualizer
+====================================================== */
+
+function renderMoonPhase(phase) {
+    if (!moonPhaseName || !moonShadow) return;
+
+    let phaseName = "";
+    let shadowX = 0;
+    
+    // Open-Meteo phase: 0 = new moon, 0.25 = first quarter, 0.5 = full, 0.75 = third quarter, 1.0 = new
+    if (phase === 0 || phase === 1) {
+        phaseName = "New Moon";
+        shadowX = 0;
+    } else if (phase > 0 && phase < 0.25) {
+        phaseName = "Waxing Crescent";
+        shadowX = 50; 
+    } else if (phase === 0.25) {
+        phaseName = "First Quarter";
+        shadowX = 100;
+    } else if (phase > 0.25 && phase < 0.5) {
+        phaseName = "Waxing Gibbous";
+        shadowX = 150;
+    } else if (phase === 0.5) {
+        phaseName = "Full Moon";
+        shadowX = 250; 
+    } else if (phase > 0.5 && phase < 0.75) {
+        phaseName = "Waning Gibbous";
+        shadowX = -150;
+    } else if (phase === 0.75) {
+        phaseName = "Third Quarter";
+        shadowX = -100;
+    } else if (phase > 0.75 && phase < 1) {
+        phaseName = "Waning Crescent";
+        shadowX = -50;
+    }
+
+    moonPhaseName.textContent = phaseName;
+    
+    // Use transform to move the shadow
+    if (phaseName === "Full Moon") {
+        moonShadow.style.opacity = "0";
+    } else if (phaseName === "New Moon") {
+        moonShadow.style.opacity = "0.95";
+        moonShadow.style.transform = `translateX(0%) scale(1.1)`;
+    } else {
+        moonShadow.style.opacity = "0.95";
+        moonShadow.style.transform = `translateX(${shadowX}%)`;
+    }
+}
+
+/* ======================================================
+   Radar Map
+====================================================== */
+
+async function updateRadarMap(lat, lon) {
+    if (typeof L === 'undefined') return;
+
+    if (!weatherMap) {
+        weatherMap = L.map('weather-map').setView([lat, lon], 10);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(weatherMap);
+    } else {
+        weatherMap.setView([lat, lon], 10);
+    }
+
+    try {
+        const response = await fetch('https://api.rainviewer.com/public/weather-maps.json');
+        const data = await response.json();
+        const past = data.radar.past;
+        
+        if (past && past.length > 0) {
+            const latestFrame = past[past.length - 1];
+            
+            if (radarLayer) {
+                weatherMap.removeLayer(radarLayer);
+            }
+
+            radarLayer = L.tileLayer(`https://tilecache.rainviewer.com/v2/radar/${latestFrame.time}/256/{z}/{x}/{y}/2/1_1.png`, {
+                opacity: 0.7,
+                attribution: 'RainViewer'
+            }).addTo(weatherMap);
+        }
+    } catch (e) {
+        console.error("Failed to load RainViewer radar layer:", e);
+    }
 }

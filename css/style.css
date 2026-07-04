@@ -696,3 +696,84 @@ transition:
 background .8s ease;
 
 }
+
+/* ========================================= */
+/* Radar Map Styles                          */
+/* ========================================= */
+
+.radar-map {
+    margin: 20px auto;
+    width: 90%;
+    max-width: 1200px;
+}
+
+#weather-map {
+    height: 400px;
+    width: 100%;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.leaflet-container {
+    background-color: rgba(255,255,255,0.1);
+    font-family: var(--font);
+}
+
+.leaflet-bar a {
+    background-color: rgba(255,255,255,0.8) !important;
+    color: #333 !important;
+}
+
+/* ========================================= */
+/* Astronomy & Moon Phase Styles             */
+/* ========================================= */
+
+.astronomy {
+    margin: 20px auto;
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+}
+
+.moon-phase-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#moon-visual {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 0 30px rgba(255,255,255,0.6), inset -15px -15px 30px rgba(0,0,0,0.3);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.moon-shadow {
+    position: absolute;
+    top: -5%;
+    left: 0;
+    width: 110%;
+    height: 110%;
+    background-color: #1a1a2e; /* dark shadow */
+    border-radius: 50%;
+    opacity: 0.95;
+    transition: transform 0.5s ease-in-out;
+}
+
+#moon-phase-name {
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: capitalize;
+}

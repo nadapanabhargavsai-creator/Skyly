@@ -25,6 +25,9 @@
     <link rel="stylesheet"
           href="css/animations.css">
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
 </head>
 
 <body class="clear-day">
@@ -201,6 +204,22 @@
 
     </button>
 
+</section>
+
+<section class="astronomy card">
+    <h2 class="section-title">Moon Phase</h2>
+    <div class="moon-phase-container">
+        <div id="moon-visual">
+            <div class="moon-disc"></div>
+            <div class="moon-shadow"></div>
+        </div>
+        <h3 id="moon-phase-name">Waxing Crescent</h3>
+    </div>
+</section>
+
+<section class="radar-map card">
+    <h2 class="section-title">Precipitation Radar</h2>
+    <div id="weather-map"></div>
 </section>
 
 

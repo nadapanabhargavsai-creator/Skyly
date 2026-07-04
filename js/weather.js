@@ -118,6 +118,10 @@ export function parseCurrentWeather(result) {
         city:
             `${result.location.name}, ${result.location.country}`,
 
+        latitude: result.location.latitude,
+
+        longitude: result.location.longitude,
+
         temperature: current.temperature_2m,
 
         humidity: current.relative_humidity_2m,
@@ -131,6 +135,12 @@ export function parseCurrentWeather(result) {
         sunrise: daily && daily.sunrise ? daily.sunrise[0] : null,
 
         sunset: daily && daily.sunset ? daily.sunset[0] : null,
+
+        moonrise: daily && daily.moonrise ? daily.moonrise[0] : null,
+
+        moonset: daily && daily.moonset ? daily.moonset[0] : null,
+
+        moonPhase: daily && daily.moon_phase ? daily.moon_phase[0] : null,
 
         uvIndex: daily && daily.uv_index_max ? daily.uv_index_max[0] : null,
 

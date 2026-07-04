@@ -375,3 +375,23 @@ export function formatTime(isoString) {
         return "--";
     }
 }
+
+/**
+ * Calculate moon phase (0.0 - 1.0) based on date
+ */
+export function calculateMoonPhase(date) {
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    if (month < 3) {
+        year--;
+        month += 12;
+    }
+    ++month;
+    let c = 365.25 * year;
+    let e = 30.6 * month;
+    let jd = c + e + day - 694039.09; 
+    let phase = jd / 29.5305882; 
+    phase -= Math.floor(phase); 
+    return phase;
+}

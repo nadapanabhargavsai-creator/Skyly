@@ -90,6 +90,10 @@ async function loadCityCoords(loc) {
 
                 city: loc.fullName,
 
+                latitude: loc.latitude,
+
+                longitude: loc.longitude,
+
                 temperature:
                     current.temperature_2m,
 
@@ -108,6 +112,12 @@ async function loadCityCoords(loc) {
                 sunrise: daily && daily.sunrise ? daily.sunrise[0] : null,
 
                 sunset: daily && daily.sunset ? daily.sunset[0] : null,
+
+                moonrise: daily && daily.moonrise ? daily.moonrise[0] : null,
+
+                moonset: daily && daily.moonset ? daily.moonset[0] : null,
+
+                moonPhase: daily && daily.moon_phase ? daily.moon_phase[0] : null,
 
                 uvIndex: daily && daily.uv_index_max ? daily.uv_index_max[0] : null,
 
@@ -175,6 +185,10 @@ async function loadCurrentLocation() {
 
                 city: "Current Location",
 
+                latitude: result.location ? result.location.latitude : result.latitude,
+
+                longitude: result.location ? result.location.longitude : result.longitude,
+
                 temperature:
                     current.temperature_2m,
 
@@ -193,6 +207,12 @@ async function loadCurrentLocation() {
                 sunrise: daily && daily.sunrise ? daily.sunrise[0] : null,
 
                 sunset: daily && daily.sunset ? daily.sunset[0] : null,
+
+                moonrise: daily && daily.moonrise ? daily.moonrise[0] : null,
+
+                moonset: daily && daily.moonset ? daily.moonset[0] : null,
+
+                moonPhase: daily && daily.moon_phase ? daily.moon_phase[0] : null,
 
                 uvIndex: daily && daily.uv_index_max ? daily.uv_index_max[0] : null,
 
